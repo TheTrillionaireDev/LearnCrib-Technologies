@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnCrib - Find Trusted Tutors Near You Instantly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            --primary: #0310bf;
+            --primary-light: #2b38ff;
+            --accent: #f5a623;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --error: #dc2626;
+        }
+        
+        body {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        
+        /* Animations */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse-scale {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+        
+        .fade-slide-up {
+            animation: fadeSlideUp 0.6s ease-out;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .gradient-hero {
+            background: linear-gradient(135deg, #0310bf 0%, #2b38ff 100%);
+        }
+        
+        .badge-verified {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+        }
+        
+        .badge-escrow {
+            background: linear-gradient(135deg, #f5a623 0%, #f59e0b 100%);
+        }
+        
+        /* Demo mode badge */
+        .demo-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #f5a623;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Mode Badge -->
+    <div class="demo-badge">
+        DEMO MODE ENABLED
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold" style="color: var(--primary);">LearnCrib</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition">How It Works</a>
+                    <a href="#trust-safety" class="text-gray-600 hover:text-gray-900 transition">Trust & Safety</a>
+                    <a href="#" onclick="navigateTo('auth.html?role=parent')" class="text-gray-600 hover:text-gray-900 transition">Login</a>
+                    <button onclick="navigateTo('auth.html?role=tutor')" class="btn px-6 py-2 rounded-lg text-white font-medium" style="background: var(--primary);">
+                        Become a Tutor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero text-white py-24 px-4 sm:px-6 lg:px-24 fade-slide-up">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    Find trusted tutors near you — instantly
+                </h1>
+                <p class="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
+                    Verified tutors. Secure escrow payments. Learn with confidence.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="navigateTo('auth.html?role=parent')" class="btn bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl w-full sm:w-auto">
+                        Find a Tutor
+                    </button>
+                    <button onclick="navigateTo('auth.html?role=tutor')" class="btn border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 w-full sm:w-auto">
+                        Become a Tutor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 px-4 sm:px-6 lg:px-24 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
+                <p class="text-xl text-gray-600">Four simple steps to quality education</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md text-center">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center text-white text-2xl font-bold" style="background: var(--primary);">
+                        1
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Search</h3>
+                    <p class="text-gray-600">Tell us what you need - subject, grade, and location</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md text-center">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center text-white text-2xl font-bold" style="background: var(--primary);">
+                        2
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Match</h3>
+                    <p class="text-gray-600">Get matched with verified tutors near you instantly</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md text-center">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center text-white text-2xl font-bold" style="background: var(--primary);">
+                        3
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Learn</h3>
+                    <p class="text-gray-600">Book sessions and learn with confidence</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md text-center">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center text-white text-2xl font-bold" style="background: var(--accent);">
+                        4
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Pay Securely</h3>
+                    <p class="text-gray-600">Funds held in escrow until session is complete</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust & Safety Section -->
+    <section id="trust-safety" class="py-24 px-4 sm:px-6 lg:px-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Trust & Safety First</h2>
+                <p class="text-xl text-gray-600">Your security is our priority</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Verified Tutors -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md">
+                    <div class="w-16 h-16 mb-6 rounded-full flex items-center justify-center text-white text-3xl" style="background: var(--success);">
+                        ✓
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Verified Tutors</h3>
+                    <p class="text-gray-600 mb-4">Every tutor is verified with NIN and BVN. We conduct thorough background checks to ensure quality and safety.</p>
+                    <div class="inline-block badge-verified text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                        100% Verified
+                    </div>
+                </div>
+                
+                <!-- Escrow Payments -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md">
+                    <div class="w-16 h-16 mb-6 rounded-full flex items-center justify-center text-white text-3xl" style="background: var(--accent);">
+                        ₦
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Escrow Payments</h3>
+                    <p class="text-gray-600 mb-4">Your payment is held securely in escrow and only released to the tutor after the session is completed.</p>
+                    <div class="inline-block badge-escrow text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                        Secure Escrow
+                    </div>
+                </div>
+                
+                <!-- Location-Based -->
+                <div class="card bg-white p-8 rounded-2xl shadow-md">
+                    <div class="w-16 h-16 mb-6 rounded-full flex items-center justify-center text-white text-3xl" style="background: var(--primary);">
+                        📍
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Location-Based</h3>
+                    <p class="text-gray-600 mb-4">Find tutors near you for convenient in-person sessions or choose from online tutors anywhere.</p>
+                    <div class="inline-block text-white px-4 py-2 rounded-lg text-sm font-semibold" style="background: var(--primary);">
+                        Near You
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wallet & Escrow Visualization -->
+    <section class="py-24 px-4 sm:px-6 lg:px-24 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">How Escrow Works</h2>
+                <p class="text-xl text-gray-600">Simple, secure, and transparent</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-8 items-center">
+                    <!-- Step 1: Payment -->
+                    <div class="text-center">
+                        <div class="card bg-white p-8 rounded-2xl shadow-md mb-4">
+                            <div class="text-4xl mb-4">💳</div>
+                            <h4 class="font-semibold text-lg mb-2">1. You Pay</h4>
+                            <p class="text-sm text-gray-600">Payment is made when booking</p>
+                        </div>
+                        <div class="text-2xl font-bold" style="color: var(--primary);">→</div>
+                    </div>
+                    
+                    <!-- Step 2: Escrow -->
+                    <div class="text-center">
+                        <div class="card p-8 rounded-2xl shadow-md mb-4" style="background: #fff3e0; border: 2px solid var(--accent);">
+                            <div class="text-4xl mb-4">🔒</div>
+                            <h4 class="font-semibold text-lg mb-2">2. Held in Escrow</h4>
+                            <p class="text-sm text-gray-600">Funds secured until session completes</p>
+                        </div>
+                        <div class="text-2xl font-bold" style="color: var(--accent);">→</div>
+                    </div>
+                    
+                    <!-- Step 3: Release -->
+                    <div class="text-center">
+                        <div class="card bg-white p-8 rounded-2xl shadow-md mb-4">
+                            <div class="text-4xl mb-4">✅</div>
+                            <h4 class="font-semibold text-lg mb-2">3. Released</h4>
+                            <p class="text-sm text-gray-600">Tutor receives payment after session</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 p-8 rounded-2xl" style="background: #f0f9ff; border-left: 4px solid var(--primary);">
+                    <p class="text-lg text-gray-700">
+                        <strong>Peace of mind guaranteed.</strong> If a session is cancelled or not completed, your payment is automatically refunded. No questions asked.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-hero text-white py-24 px-4 sm:px-6 lg:px-24">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to start learning?</h2>
+            <p class="text-xl mb-12 text-blue-100">Join thousands of parents and learners who trust LearnCrib</p>
+            <button onclick="navigateTo('auth.html?role=parent')" class="btn bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl">
+                Find Your Tutor Today
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-24">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="text-2xl font-bold mb-4">LearnCrib</div>
+            <p class="text-gray-400 mb-8">Quality education, trusted tutors, secure payments</p>
+            <div class="text-sm text-gray-500">
+                © 2025 LearnCrib. Built for hackathon demo.
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Dashboard - LearnCrib</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            --primary: #0310bf;
+            --primary-light: #2b38ff;
+            --accent: #f5a623;
+            --success: #16a34a;
+        }
+        
+        body {
+            background: #f8fafc;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-verified {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .count-up {
+            animation: countUp 0.5s ease-out;
+        }
+        
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 1000;
+            animation: confetti 2s ease-out forwards;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .toast {
+            animation: slideDown 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24">
+            <div class="flex justify-between items-center h-16">
+                <span class="text-2xl font-bold" style="color: var(--primary);">LearnCrib</span>
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-600" id="user-greeting"></span>
+                    <button onclick="logout()" class="text-gray-600 hover:text-gray-900 transition">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24 py-8">
+        <!-- Profile Section -->
+        <div class="bg-white rounded-2xl shadow-md p-8 mb-8 fade-in">
+            <div class="flex items-start justify-between">
+                <div class="flex items-start">
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center text-white text-4xl font-bold mr-6" style="background: var(--primary);" id="profile-avatar">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h1 class="text-3xl font-bold" id="profile-name"></h1>
+                            <span class="badge-verified text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                ✓ Verified
+                            </span>
+                        </div>
+                        <p class="text-gray-600 mb-2" id="profile-username"></p>
+                        <p class="text-gray-700 mb-3" id="profile-bio"></p>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="flex items-center">
+                                <span class="text-yellow-500 mr-1">★</span>
+                                <span class="font-semibold" id="profile-rating"></span>
+                            </div>
+                            <div class="text-gray-600">
+                                <span class="font-semibold" id="profile-sessions"></span> sessions completed
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Overview -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- Escrow Balance -->
+            <div class="card bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-md p-8 border-2 border-amber-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Escrow Balance</h3>
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style="background: var(--accent); color: white;">
+                        🔒
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="text-4xl font-bold mb-1" style="color: var(--accent);" id="escrow-balance">₦0</div>
+                    <p class="text-sm text-gray-600">Funds held until session completion</p>
+                </div>
+                <div class="mt-4 p-3 bg-white bg-opacity-60 rounded-lg text-xs text-gray-700">
+                    Complete sessions to release funds to your wallet
+                </div>
+            </div>
+
+            <!-- Available Balance -->
+            <div class="card bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-md p-8 border-2 border-green-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Available Balance</h3>
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style="background: var(--success); color: white;">
+                        ✓
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="text-4xl font-bold mb-1" style="color: var(--success);" id="wallet-balance">₦0</div>
+                    <p class="text-sm text-gray-600">Ready to withdraw</p>
+                </div>
+                <button class="mt-4 w-full py-3 rounded-lg text-white font-semibold" style="background: var(--success);">
+                    Withdraw Funds
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Sessions -->
+        <div class="bg-white rounded-2xl shadow-md p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-6">Active Sessions</h2>
+            <div id="active-sessions">
+                <!-- Sessions will be populated here -->
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-2xl shadow-md p-8">
+            <h2 class="text-2xl font-bold mb-6">Recent Activity</h2>
+            <div id="recent-activity" class="space-y-4">
+                <div class="text-center py-8 text-gray-500">
+                    <p>No recent activity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed top-20 right-4 bg-white rounded-xl shadow-2xl p-6 z-50 toast max-w-md">
+        <div class="flex items-start">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center mr-4" style="background: var(--success);">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-bold text-lg mb-1">Payment Released!</h4>
+                <p class="text-gray-600 text-sm" id="toast-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div id="confetti-container"></div>
+
+    <script>
+        let currentUser = null;
+
+        // Check authentication
+        function checkAuth() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (!user) {
+                // Try to load first demo tutor
+                const tutors = JSON.parse(localStorage.getItem('tutors') || '[]');
+                if (tutors.length > 0) {
+                    currentUser = tutors[0];
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                } else {
+                    window.location.href = 'auth.html?role=tutor';
+                    return;
+                }
+            } else {
+                currentUser = user;
+            }
+            
+            loadProfile();
+            loadSessions();
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        function loadProfile() {
+            document.getElementById('profile-avatar').textContent = currentUser.fullName.charAt(0);
+            document.getElementById('profile-name').textContent = currentUser.fullName;
+            document.getElementById('profile-username').textContent = '@' + currentUser.username;
+            document.getElementById('profile-bio').textContent = currentUser.bio || 'Experienced tutor';
+            document.getElementById('profile-rating').textContent = currentUser.rating || '5.0';
+            document.getElementById('profile-sessions').textContent = currentUser.sessionsCompleted || 0;
+            document.getElementById('user-greeting').textContent = `Welcome, ${currentUser.username}`;
+            
+            // Update wallet balances
+            updateWalletDisplay();
+        }
+
+        function updateWalletDisplay() {
+            // Get latest tutor data
+            const tutors = JSON.parse(localStorage.getItem('tutors') || '[]');
+            const tutor = tutors.find(t => t.id === currentUser.id);
+            
+            if (tutor) {
+                currentUser.escrowBalance = tutor.escrowBalance || 0;
+                currentUser.walletBalance = tutor.walletBalance || 0;
+            }
+            
+            document.getElementById('escrow-balance').textContent = '₦' + (currentUser.escrowBalance || 0).toLocaleString();
+            document.getElementById('wallet-balance').textContent = '₦' + (currentUser.walletBalance || 0).toLocaleString();
+        }
+
+        function loadSessions() {
+            const sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+            const tutorSessions = sessions.filter(s => s.tutorId === currentUser.id && s.status !== 'completed');
+            
+            const container = document.getElementById('active-sessions');
+            
+            if (tutorSessions.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <p>No active sessions yet</p>
+                        <p class="text-sm mt-2">Sessions will appear here once parents book with you</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            tutorSessions.forEach(session => {
+                const sessionCard = document.createElement('div');
+                sessionCard.className = 'card bg-gray-50 p-6 rounded-xl mb-4';
+                
+                sessionCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">${session.subject}</h3>
+                            <div class="space-y-1 text-sm text-gray-600">
+                                <p><strong>Grade:</strong> ${session.grade}</p>
+                                <p><strong>Duration:</strong> ${session.duration}</p>
+                                <p><strong>Mode:</strong> ${session.mode}</p>
+                                <p><strong>Booked:</strong> ${new Date(session.date).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold mb-2" style="color: var(--accent);">
+                                ₦${session.amount.toLocaleString()}
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white" style="background: var(--accent);">
+                                In Escrow
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 mt-4">
+                        <button onclick="completeSession('${session.id}')" class="btn flex-1 py-3 rounded-lg text-white font-semibold" style="background: var(--success);">
+                            Mark Session Completed
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(sessionCard);
+            });
+        }
+
+        function completeSession(sessionId) {
+            // Get session
+            const sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+            const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+            
+            if (sessionIndex === -1) return;
+            
+            const session = sessions[sessionIndex];
+            const amount = session.amount;
+            
+            // Update session status
+            sessions[sessionIndex].status = 'completed';
+            sessions[sessionIndex].completedDate = new Date().toISOString();
+            localStorage.setItem('sessions', JSON.stringify(sessions));
+            
+            // Move funds from escrow to wallet
+            const tutors = JSON.parse(localStorage.getItem('tutors') || '[]');
+            const tutorIndex = tutors.find(t => t.id === currentUser.id);
+            
+            if (tutorIndex !== -1) {
+                const tutor = tutors[tutors.findIndex(t => t.id === currentUser.id)];
+                tutor.escrowBalance = Math.max(0, (tutor.escrowBalance || 0) - amount);
+                tutor.walletBalance = (tutor.walletBalance || 0) + amount;
+                tutor.sessionsCompleted = (tutor.sessionsCompleted || 0) + 1;
+                
+                tutors[tutors.findIndex(t => t.id === currentUser.id)] = tutor;
+                localStorage.setItem('tutors', JSON.stringify(tutors));
+                
+                // Update current user
+                currentUser = tutor;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            // Animate balance update
+            animateBalanceUpdate(amount);
+            
+            // Show toast
+            showToast(amount);
+            
+            // Create confetti
+            createConfetti();
+            
+            // Reload display
+            setTimeout(() => {
+                loadProfile();
+                loadSessions();
+            }, 500);
+        }
+
+        function animateBalanceUpdate(amount) {
+            const escrowEl = document.getElementById('escrow-balance');
+            const walletEl = document.getElementById('wallet-balance');
+            
+            escrowEl.classList.add('count-up');
+            walletEl.classList.add('count-up');
+            
+            setTimeout(() => {
+                escrowEl.classList.remove('count-up');
+                walletEl.classList.remove('count-up');
+            }, 500);
+        }
+
+        function showToast(amount) {
+            const toast = document.getElementById('toast');
+            const message = document.getElementById('toast-message');
+            
+            message.textContent = `₦${amount.toLocaleString()} has been released to your wallet. You can now withdraw these funds.`;
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5000);
+        }
+
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#f5a623', '#16a34a', '#0310bf', '#dc2626', '#f59e0b'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (Math.random() * 1 + 1.5) + 's';
+                
+                container.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>
