@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - LearnCrib</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            --primary: #0310bf;
+            --primary-light: #2b38ff;
+            --accent: #f5a623;
+            --success: #16a34a;
+        }
+        
+        body {
+            background: #f8fafc;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-field {
+            transition: all 0.2s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(3, 16, 191, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes pulse-pin {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+        
+        .pulse-pin {
+            animation: pulse-pin 2s ease-in-out infinite;
+        }
+        
+        .tutor-pin {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--success);
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tutor-pin:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        
+        .parent-pin {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .badge-best-match {
+            background: linear-gradient(135deg, #f5a623 0%, #f59e0b 100%);
+        }
+        
+        .badge-closest {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+        }
+        
+        .badge-value {
+            background: linear-gradient(135deg, #0310bf 0%, #2b38ff 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24">
+            <div class="flex justify-between items-center h-16">
+                <span class="text-2xl font-bold" style="color: var(--primary);">LearnCrib</span>
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-600" id="user-greeting"></span>
+                    <button onclick="logout()" class="text-gray-600 hover:text-gray-900 transition">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24 py-8">
+        <!-- Welcome Section -->
+        <div id="welcome-section" class="mb-8 fade-in">
+            <h1 class="text-4xl font-bold mb-4">Find Your Perfect Tutor</h1>
+            <p class="text-xl text-gray-600 mb-6">Let's match you with verified tutors near you</p>
+            <button onclick="startTutorSearch()" class="btn px-8 py-4 rounded-xl text-white font-semibold text-lg" style="background: var(--primary);">
+                Start Search
+            </button>
+        </div>
+
+        <!-- Step 1: Learning Criteria -->
+        <div id="step-1" class="hidden fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 max-w-2xl">
+                <h2 class="text-3xl font-bold mb-6">Learning Criteria</h2>
+                <form id="criteria-form">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Grade/Class</label>
+                            <select id="grade" required class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                <option value="">Select grade</option>
+                                <option value="JSS1">JSS1</option>
+                                <option value="JSS2">JSS2</option>
+                                <option value="JSS3">JSS3</option>
+                                <option value="SS1">SS1</option>
+                                <option value="SS2">SS2</option>
+                                <option value="SS3">SS3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <select id="subject" required class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                <option value="">Select subject</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="English">English</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Further Mathematics">Further Mathematics</option>
+                                <option value="Literature">Literature</option>
+                                <option value="Economics">Economics</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Learner Age</label>
+                            <input type="number" id="age" required min="10" max="20" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg" placeholder="Enter age">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Learning Mode</label>
+                            <select id="mode" required class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                <option value="">Select mode</option>
+                                <option value="Home">Home (In-person)</option>
+                                <option value="Online">Online</option>
+                                <option value="Hybrid">Hybrid (Both)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn w-full py-3 rounded-lg text-white font-semibold" style="background: var(--primary);">
+                            Continue
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Step 2: Session Preferences -->
+        <div id="step-2" class="hidden fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8 max-w-2xl">
+                <h2 class="text-3xl font-bold mb-6">Session Preferences</h2>
+                <form id="preferences-form">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget per Hour (₦)</label>
+                            <input type="number" id="budget" required min="1000" max="10000" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg" placeholder="e.g., 3500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Days</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" value="Weekdays" class="mr-2">
+                                    <span>Weekdays</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" value="Weekends" class="mr-2">
+                                    <span>Weekends</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Session Duration</label>
+                            <select id="duration" required class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                <option value="1">1 hour</option>
+                                <option value="1.5">1.5 hours</option>
+                                <option value="2">2 hours</option>
+                                <option value="3">3 hours</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Time of Day</label>
+                            <select id="timeOfDay" required class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg">
+                                <option value="Morning">Morning (8AM - 12PM)</option>
+                                <option value="Afternoon">Afternoon (12PM - 5PM)</option>
+                                <option value="Evening">Evening (5PM - 9PM)</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="goToStep(1)" class="btn flex-1 py-3 rounded-lg font-semibold bg-gray-100 text-gray-700">
+                                Back
+                            </button>
+                            <button type="submit" class="btn flex-1 py-3 rounded-lg text-white font-semibold" style="background: var(--primary);">
+                                Find Tutors
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Step 3: Map View -->
+        <div id="step-3" class="hidden fade-in">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold mb-6">Tutors Near You</h2>
+                
+                <!-- Simulated Map -->
+                <div class="relative w-full h-96 bg-gray-100 rounded-xl overflow-hidden mb-6" style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);">
+                    <!-- Grid overlay to simulate map -->
+                    <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(0deg, #0310bf 0px, #0310bf 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, #0310bf 0px, #0310bf 1px, transparent 1px, transparent 40px);"></div>
+                    
+                    <!-- Parent Pin (Center) -->
+                    <div class="parent-pin" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <div class="absolute inset-0 flex items-center justify-center text-white font-bold">You</div>
+                    </div>
+                    
+                    <!-- Tutor Pins -->
+                    <div class="tutor-pin pulse-pin" style="top: 30%; left: 40%;" data-tutor="0"></div>
+                    <div class="tutor-pin" style="top: 45%; left: 65%;" data-tutor="1"></div>
+                    <div class="tutor-pin pulse-pin" style="top: 60%; left: 35%;" data-tutor="2"></div>
+                    <div class="tutor-pin" style="top: 35%; left: 70%;" data-tutor="3"></div>
+                    <div class="tutor-pin pulse-pin" style="top: 65%; left: 55%;" data-tutor="4"></div>
+                    
+                    <div class="absolute top-4 left-4 bg-white px-4 py-2 rounded-lg shadow-md">
+                        <p class="text-sm font-semibold">5 tutors available nearby</p>
+                    </div>
+                </div>
+                
+                <button onclick="showMatches()" class="btn w-full py-4 rounded-xl text-white font-semibold text-lg" style="background: var(--primary);">
+                    See Matches
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Matching & Results -->
+        <div id="step-4" class="hidden">
+            <!-- Loading State -->
+            <div id="matching-loader" class="text-center py-16">
+                <div class="spinner w-20 h-20 border-4 rounded-full mx-auto mb-6" style="border-color: var(--primary); border-top-color: transparent;"></div>
+                <h3 class="text-2xl font-bold mb-2">Finding your perfect match...</h3>
+                <p class="text-gray-600">Analyzing tutor profiles and availability</p>
+            </div>
+            
+            <!-- Results -->
+            <div id="tutor-results" class="hidden fade-in">
+                <h2 class="text-3xl font-bold mb-6">Your Top Matches</h2>
+                <div id="tutors-grid" class="grid md:grid-cols-3 gap-6 mb-8"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="backdrop-filter: blur(4px);">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="text-2xl font-bold">Book Session</h3>
+                    <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+                
+                <div id="tutor-details" class="mb-6"></div>
+                
+                <div class="border-t pt-6">
+                    <h4 class="font-semibold text-lg mb-4">Payment Method</h4>
+                    <div class="space-y-3 mb-6">
+                        <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                            <input type="radio" name="payment" value="card" checked class="mr-3">
+                            <div class="flex-1">
+                                <div class="font-semibold">Card Payment</div>
+                                <div class="text-sm text-gray-600">Pay with debit/credit card</div>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                            <input type="radio" name="payment" value="transfer" class="mr-3">
+                            <div class="flex-1">
+                                <div class="font-semibold">Bank Transfer</div>
+                                <div class="text-sm text-gray-600">Transfer to our account</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6">
+                        <p class="text-sm"><strong>Escrow Protection:</strong> Your payment will be held securely and only released to the tutor after the session is completed.</p>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button onclick="closeBookingModal()" class="btn flex-1 py-3 rounded-lg font-semibold bg-gray-100 text-gray-700">
+                            Cancel
+                        </button>
+                        <button onclick="processPayment()" class="btn flex-1 py-3 rounded-lg text-white font-semibold" style="background: var(--success);">
+                            Pay & Book
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let searchCriteria = {};
+        let selectedTutor = null;
+
+        // Check authentication
+        function checkAuth() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (!user || user.role !== 'parent') {
+                window.location.href = 'auth.html?role=parent';
+                return;
+            }
+            currentUser = user;
+            document.getElementById('user-greeting').textContent = `Welcome, ${user.username}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        function startTutorSearch() {
+            document.getElementById('welcome-section').classList.add('hidden');
+            goToStep(1);
+        }
+
+        function goToStep(step) {
+            // Hide all steps
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('step-4').classList.add('hidden');
+            
+            // Show requested step
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+        }
+
+        // Step 1: Criteria Form
+        document.getElementById('criteria-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            searchCriteria.grade = document.getElementById('grade').value;
+            searchCriteria.subject = document.getElementById('subject').value;
+            searchCriteria.age = document.getElementById('age').value;
+            searchCriteria.mode = document.getElementById('mode').value;
+            goToStep(2);
+        });
+
+        // Step 2: Preferences Form
+        document.getElementById('preferences-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            searchCriteria.budget = document.getElementById('budget').value;
+            searchCriteria.duration = document.getElementById('duration').value;
+            searchCriteria.timeOfDay = document.getElementById('timeOfDay').value;
+            goToStep(3);
+        });
+
+        function showMatches() {
+            goToStep(4);
+            
+            // Show loading state
+            document.getElementById('matching-loader').classList.remove('hidden');
+            document.getElementById('tutor-results').classList.add('hidden');
+            
+            // Simulate matching delay
+            setTimeout(() => {
+                displayTutorResults();
+                document.getElementById('matching-loader').classList.add('hidden');
+                document.getElementById('tutor-results').classList.remove('hidden');
+            }, 2500);
+        }
+
+        function displayTutorResults() {
+            const tutors = JSON.parse(localStorage.getItem('tutors') || '[]');
+            
+            // Filter tutors by subject and mode
+            let matchedTutors = tutors.filter(t => 
+                t.subjects.includes(searchCriteria.subject) &&
+                t.mode.includes(searchCriteria.mode)
+            );
+
+            // If we have less than 3, show all available tutors
+            if (matchedTutors.length < 3) {
+                matchedTutors = tutors.slice(0, 3);
+            }
+
+            const badges = ['badge-best-match', 'badge-closest', 'badge-value'];
+            const labels = ['Best Match', 'Closest', 'Best Value'];
+            
+            const grid = document.getElementById('tutors-grid');
+            grid.innerHTML = '';
+            
+            matchedTutors.slice(0, 3).forEach((tutor, idx) => {
+                const card = document.createElement('div');
+                card.className = 'card bg-white rounded-2xl shadow-md p-6 slide-in';
+                card.style.animationDelay = `${idx * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="${badges[idx]} text-white px-3 py-1 rounded-full text-xs font-semibold mb-4 inline-block">
+                        ${labels[idx]}
+                    </div>
+                    <div class="flex items-start mb-4">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4" style="background: var(--primary);">
+                            ${tutor.fullName.charAt(0)}
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold mb-1">${tutor.fullName}</h3>
+                            <p class="text-sm text-gray-600">@${tutor.username}</p>
+                            <div class="flex items-center mt-1">
+                                <span class="text-yellow-500 mr-1">★</span>
+                                <span class="text-sm font-semibold">${tutor.rating}</span>
+                                <span class="text-xs text-gray-500 ml-2">${tutor.sessionsCompleted} sessions</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">${tutor.bio || 'Experienced tutor'}</p>
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            ${tutor.subjects.map(s => `<span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-semibold">${s}</span>`).join('')}
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 mb-1">
+                            <span class="mr-2">📍</span>
+                            <span>${tutor.location.name}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <span class="mr-2">⚡</span>
+                            <span>Responds in ${tutor.responseTime}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-4 border-t">
+                        <div>
+                            <div class="text-2xl font-bold" style="color: var(--primary);">₦${tutor.hourlyRate.toLocaleString()}</div>
+                            <div class="text-xs text-gray-500">per hour</div>
+                        </div>
+                        <button onclick='openBookingModal(${JSON.stringify(tutor).replace(/'/g, "&apos;")})' class="btn px-6 py-2 rounded-lg text-white font-semibold" style="background: var(--primary);">
+                            Book Now
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function openBookingModal(tutor) {
+            selectedTutor = tutor;
+            const duration = parseFloat(searchCriteria.duration);
+            const totalAmount = tutor.hourlyRate * duration;
+            
+            document.getElementById('tutor-details').innerHTML = `
+                <div class="flex items-center mb-4">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4" style="background: var(--primary);">
+                        ${tutor.fullName.charAt(0)}
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">${tutor.fullName}</h4>
+                        <p class="text-sm text-gray-600">${searchCriteria.subject} • ${searchCriteria.mode}</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Duration</span>
+                        <span class="font-semibold">${duration} hour${duration > 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Rate</span>
+                        <span class="font-semibold">₦${tutor.hourlyRate.toLocaleString()}/hr</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-bold pt-2 border-t">
+                        <span>Total</span>
+                        <span style="color: var(--primary);">₦${totalAmount.toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('booking-modal').classList.remove('hidden');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function processPayment() {
+            if (!selectedTutor) return;
+            
+            const duration = parseFloat(searchCriteria.duration);
+            const totalAmount = selectedTutor.hourlyRate * duration;
+            
+            // Create booking/session
+            const session = {
+                id: 'session-' + Date.now(),
+                tutorId: selectedTutor.id,
+                tutorName: selectedTutor.fullName,
+                parentId: currentUser.id,
+                subject: searchCriteria.subject,
+                grade: searchCriteria.grade,
+                amount: totalAmount,
+                status: 'booked',
+                date: new Date().toISOString(),
+                mode: searchCriteria.mode,
+                duration: `${duration} hour${duration > 1 ? 's' : ''}`,
+            };
+            
+            // Add to sessions
+            const sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+            sessions.push(session);
+            localStorage.setItem('sessions', JSON.stringify(sessions));
+            
+            // Update tutor escrow balance
+            const tutors = JSON.parse(localStorage.getItem('tutors') || '[]');
+            const tutorIndex = tutors.findIndex(t => t.id === selectedTutor.id);
+            if (tutorIndex !== -1) {
+                tutors[tutorIndex].escrowBalance = (tutors[tutorIndex].escrowBalance || 0) + totalAmount;
+                localStorage.setItem('tutors', JSON.stringify(tutors));
+            }
+            
+            closeBookingModal();
+            
+            // Show success message
+            alert(`Success! Your session with ${selectedTutor.fullName} has been booked. Payment of ₦${totalAmount.toLocaleString()} is held in escrow.`);
+            
+            // Reset to welcome
+            document.getElementById('step-4').classList.add('hidden');
+            document.getElementById('welcome-section').classList.remove('hidden');
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

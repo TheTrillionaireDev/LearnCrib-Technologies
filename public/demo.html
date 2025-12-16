@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Guide - LearnCrib</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        :root {
+            --primary: #0310bf;
+            --primary-light: #2b38ff;
+            --accent: #f5a623;
+            --success: #16a34a;
+        }
+        
+        body {
+            background: #f8fafc;
+        }
+        
+        .gradient-hero {
+            background: linear-gradient(135deg, #0310bf 0%, #2b38ff 100%);
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center">
+                    <span class="text-2xl font-bold" style="color: var(--primary);">LearnCrib</span>
+                </a>
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 transition">Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero text-white py-16 px-4 sm:px-6 lg:px-24">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold mb-4">Demo Guide</h1>
+            <p class="text-xl text-blue-100">Experience LearnCrib's complete tutoring flow</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-24 py-12">
+        <!-- Quick Links -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 class="text-3xl font-bold mb-6">Quick Access</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <button onclick="experienceParentFlow()" class="btn p-6 rounded-xl text-left border-2 hover:border-blue-500" style="border-color: var(--primary);">
+                    <div class="text-2xl mb-2">👨‍👩‍👧</div>
+                    <h3 class="font-bold text-lg mb-1">Parent Experience</h3>
+                    <p class="text-sm text-gray-600">Find and book a tutor</p>
+                </button>
+                <button onclick="experienceTutorFlow()" class="btn p-6 rounded-xl text-left border-2 hover:border-green-500" style="border-color: var(--success);">
+                    <div class="text-2xl mb-2">👨‍🏫</div>
+                    <h3 class="font-bold text-lg mb-1">Tutor Experience</h3>
+                    <p class="text-sm text-gray-600">Manage sessions & earnings</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Demo Credentials -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 class="text-3xl font-bold mb-6">Demo Credentials</h2>
+            
+            <div class="space-y-6">
+                <!-- Parent Login -->
+                <div class="p-6 bg-blue-50 rounded-xl">
+                    <h3 class="font-bold text-lg mb-3" style="color: var(--primary);">Parent/Learner Login</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Username:</span>
+                            <span class="font-mono font-semibold">parent_demo</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Password:</span>
+                            <span class="font-mono font-semibold">Any password</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Wallet:</span>
+                            <span class="font-semibold">₦25,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tutor Login -->
+                <div class="p-6 bg-green-50 rounded-xl">
+                    <h3 class="font-bold text-lg mb-3" style="color: var(--success);">Demo Tutor Login</h3>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Username:</span>
+                            <span class="font-mono font-semibold">chidi_math</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Escrow Balance:</span>
+                            <span class="font-semibold">₦7,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Wallet Balance:</span>
+                            <span class="font-semibold">₦45,000</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600">Note: Demo tutor dashboard auto-loads. Check active sessions to see escrow in action.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flow Overview -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <h2 class="text-3xl font-bold mb-6">Demo Flow Overview</h2>
+            
+            <div class="space-y-8">
+                <!-- Step 1 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style="background: var(--primary);">1</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Parent Books a Session</h3>
+                        <p class="text-gray-600 mb-3">Login as parent → Search for tutor → Select subject and preferences → View map with nearby tutors → Book and pay</p>
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>5 verified tutors available</li>
+                            <li>Interactive map with tutor pins</li>
+                            <li>Payment goes to escrow (not tutor wallet)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style="background: var(--accent);">2</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Funds Held in Escrow</h3>
+                        <p class="text-gray-600 mb-3">Payment is secured in escrow, visible in tutor's dashboard but not yet withdrawable</p>
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>Tutor sees escrow balance (amber)</li>
+                            <li>Active session shows in tutor dashboard</li>
+                            <li>Parent protected until session completes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style="background: var(--success);">3</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Tutor Completes Session</h3>
+                        <p class="text-gray-600 mb-3">Tutor marks session complete → Funds transfer from escrow to wallet with animation</p>
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>Count-up animation on balances</li>
+                            <li>Success toast notification</li>
+                            <li>Optional CSS confetti celebration</li>
+                            <li>Funds now withdrawable</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold mb-6">Key Features to Showcase</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card p-6 bg-gray-50 rounded-xl">
+                    <h3 class="font-bold mb-2">🔐 Trust & Verification</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• NIN & BVN verification</li>
+                        <li>• Verified badges on profiles</li>
+                        <li>• Masked sensitive information</li>
+                    </ul>
+                </div>
+                
+                <div class="card p-6 bg-gray-50 rounded-xl">
+                    <h3 class="font-bold mb-2">💰 Escrow System</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Secure payment holding</li>
+                        <li>• Visual escrow vs wallet balance</li>
+                        <li>• Funds release on completion</li>
+                    </ul>
+                </div>
+                
+                <div class="card p-6 bg-gray-50 rounded-xl">
+                    <h3 class="font-bold mb-2">📍 Location Matching</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Interactive map interface</li>
+                        <li>• Nearby tutor discovery</li>
+                        <li>• Distance-based matching</li>
+                    </ul>
+                </div>
+                
+                <div class="card p-6 bg-gray-50 rounded-xl">
+                    <h3 class="font-bold mb-2">✨ Premium UX</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Smooth animations</li>
+                        <li>• Loading states</li>
+                        <li>• Celebratory effects</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-24 mt-12">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="text-2xl font-bold mb-4">LearnCrib</div>
+            <p class="text-gray-400 mb-8">Hackathon Demo - Frontend Only MVP</p>
+            <div class="text-sm text-gray-500">Built with HTML, CSS, Tailwind CSS, and Vanilla JavaScript</div>
+        </div>
+    </footer>
+
+    <script>
+        function experienceParentFlow() {
+            // Auto-login as demo parent
+            const demoParent = {
+                id: 'parent-demo',
+                username: 'parent_demo',
+                role: 'parent',
+                walletBalance: 25000
+            };
+            localStorage.setItem('currentUser', JSON.stringify(demoParent));
+            window.location.href = 'parent-dashboard.html';
+        }
+
+        function experienceTutorFlow() {
+            // Auto-login as demo tutor
+            const tutors = JSON.parse(localStorage.getItem('tutors') || '[]');
+            if (tutors.length > 0) {
+                localStorage.setItem('currentUser', JSON.stringify(tutors[0]));
+                window.location.href = 'tutor-dashboard.html';
+            } else {
+                alert('Please visit the home page first to initialize demo data');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
